@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mx-auto" style="width: 300px;">
+    <div class="container">
+        <center>
+            <h1>Feed</h1>
+            {% if current_user.is_authenticated %}
+            {% else %} 
+                Login to see user profiles
+                </br></br>
+            {% endif %}
+        </center>
+    </div>
+
+    <!-- show all posts by user -->
+    {% for i in range(posts|length)[::-1] %}
+    <div>
+        
+        <div class="container" style="width: 300px;">
+            <div class="row">
+                <div class="col">
+                    {% if current_user.is_authenticated %} 
+                        <h6> &nbsp;<a href="{{ url_for('posts.profile', username = posts[i].author.username) }}">@{{ posts[i].author.username }}</a></h6>
+                    {% else %}
+                        @{{ posts[i].author.username }}
+                    {% endif %}
+                </div>
+                <div class="col-sm" style="width: 90px">
+                    <div align="right">{{ posts[i].date }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <img class="mr-3 comment-pic" src="data:image/png;base64,{{images[i]}}" alt="" height=300 width=300>
+        </div>
+        <div class="container-md mt-1">
+            Caption: {{ posts[i].caption }}
+        </div> 
+        <div class="container">
+            <center><a href="{{ url_for('posts.post', postid=posts[i].postid ) }}">visit post page</a></center>
+        </div>
+        </br></br>
+        {% endfor %}
+        <!-- add few comments and post link here -->
+
+    </div>
+</div>
+{% endblock %}

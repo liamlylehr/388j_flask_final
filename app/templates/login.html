@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+    <center>
+        <h1>Sign In</h1>
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            <div class="form-group" style="width: 40%;">
+                {{ form.username.label }}
+                {{ form.username(class="form-control") }}
+        
+                {% if form.username.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {% for error in form.username.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        
+        </br>
+        
+            <div class="form-group mb-2" style="width: 40%;">
+                    <label for="exampleInputEmail1" class="form-label">{{ form.password.label }}</label>
+                    {{ form.password(class="form-control") }}
+        
+                    {% if form.password.errors %}
+                    <div class="alert alert-warning" role="alert">
+                        {% for error in form.password.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <!-- {{ form.submit() }} -->
+        </form>
+        <div>
+            <p> Don't have an account yet?
+                <a href="{{ url_for('users.register')}}"> Register Here</a>
+            </p>
+        </div>
+    </center>
+{% endblock %}

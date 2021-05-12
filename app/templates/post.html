@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div align=center>
+    <h1> {{post.author.username}}'s post: </h1>
+    <!-- show all posts by user -->
+    <div>
+        <hr width=400>
+        <p> <a href="{{ url_for('posts.profile', username = post.author.username) }}">@{{ post.author.username }}</a>
+            <br>
+            Timestamp: {{ post.date }} <br>
+            Caption: {{ post.caption }}
+        </p>
+        <img class="mr-3 comment-pic" src="data:image/png;base64,{{image}}" alt="" height=300 width=300>
+
+        {% if current_user.is_authenticated %}
+        <form method="POST" action="">
+            {{ commentform.csrf_token }}
+            <div class="form-group mb-2" style="width: 30%;">
+                {{ commentform.comment.label }}
+                {{ commentform.comment(class="form-control") }}
+                
+                {% if commentform.comment.errors %}
+                <div class="alert alert-warning" role="alert">
+                {% for error in commentform.comment.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Comment</button>
+        </form>
+        {% endif %}
+
+
+        {% if comments %}
+        <h4>Comments:</h4>
+        {% for i in range(comments|length) %}
+        <p> <a href="{{ url_for('posts.profile', username = comments[i].author.username) }}">@{{ comments[i].author.username }}</a>: {{comments[i].comment}} </p>
+        {% endfor %}
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

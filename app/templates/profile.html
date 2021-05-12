@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mx-auto" style="width: 50%;">
+    <center><h1> {{username}}'s Page </h1>
+    <h5> {{posts|length}} Posts</h5></center>
+    <!-- for making posts -->
+    {% if current_user.username == username %}
+    
+    <h2> Make a Post </h2>
+    <div>
+        <form method=post enctype=multipart/form-data>
+            {{ postform.csrf_token }}
+
+            <div class="form-group">
+                {{ postform.image.label }}
+                {{ postform.image(class="form-control") }}
+                {% if postform.image.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {% for error in postform.image.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ postform.caption.label }}
+                {{ postform.caption(class="form-control") }}
+                {% if postform.caption.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {% for error in postform.caption.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary"> Post </button>
+        </form>
+    </div>
+    <br>
+    {% endif %}
+
+
+
+
+    <h5>Insights</h5>
+
+    <div id="chart" class="chart">
+    </div>
+     <div class="ct-chart ct-perfect-fourth"></div>
+                <script>
+                    lab = JSON.parse({{ x | tojson }})
+                    dat = JSON.parse({{ y | tojson }})
+                    var data = {
+                        // A labels array that can contain any sort of values
+                        labels: lab,
+                        // Our series array that contains series objects or in this case series data arrays
+                        series: [
+                            dat
+                        ]
+                    };
+
+                    // Create a new line chart object where as first parameter we pass in a selector
+                    // that is resolving to our chart container element. The Second parameter
+                    // is the actual data object.
+                    new Chartist.Bar('.ct-chart', data);
+                </script>
+    <!-- {{ plt }} -->
+    {{ x }}
+    {{ y }}
+    
+
+    <center><h2>All Posts</h2></br></center>
+    <!-- show all posts by user -->
+    {% for i in range(posts|length)[::-1] %}
+    <!-- <hr width=400> -->
+    <center>
+        
+        <div>
+            
+                Date: {{ posts[i].date }}</p> 
+                <img class="mr-3 comment-pic" src="data:image/png;base64,{{images[i]}}" alt="" height=300 width=300></br>
+                Caption: {{ posts[i].caption }} 
+            
+        
+            <!-- add few comments and post link here -->
+            <br>
+            
+            <a href="{{ url_for('posts.post', postid=posts[i].postid ) }}">visit post page</a>
+                </br></br>
+        </div>
+    </center>
+    {% endfor %}
+</div>
+{% endblock %}
